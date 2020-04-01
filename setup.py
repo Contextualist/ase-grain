@@ -11,7 +11,7 @@ setuptools.setup(
     description="An async wrapper for ASE",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.iu.edu/zhanghar/ase-grain",
+    url="https://github.com/Contextualist/ase-grain",
     packages=setuptools.find_packages(),
     install_requires=[
         "ase @ git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424",
