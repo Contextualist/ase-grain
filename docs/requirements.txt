@@ -3,3 +3,5 @@ sphinx_rtd_theme
 sphinxcontrib-trio
 
 git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424
+trio
+grain-scheduler

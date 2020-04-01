@@ -15,6 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "ase @ git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424",
+        "grain-scheduler >= 0.11.0"
     ],
     tests_require = [
         "pytest",
