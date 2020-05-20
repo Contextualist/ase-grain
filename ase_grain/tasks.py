@@ -8,6 +8,8 @@ from ase.calculators.orca import ORCA
 
 from grain import GVAR
 
+from os import environ
+
 async def gautask(cid, mb, chg_mlt, atcor, ian, gau="g16"):
     """
     Args:
@@ -34,7 +36,7 @@ async def psi4task(cid, mb, chg_mlt, atcor, ian):
     calc = Psi4(
         **__dl(cid), method=m, basis=b,
         charge=chg_mlt[0], multiplicity=chg_mlt[1],
-        num_threads=GVAR.res.N, # use N threads for N cores
+        num_threads=GVAR.res.N, # use N threads for N cores, and subprocify handles which cores to bind
         memory=f"{getattr(GVAR.res,'m',0.5)}GB",
     )
     return await ase_task(cid, atcor, ian, calc)
@@ -46,20 +48,34 @@ async def qetask(cid, mb, chg_mlt, atcor, ian):
     )
     return await ase_fio_task(cid, atcor, ian, calc)
 
-async def orcatask(cid, mb, chg_mlt, atcor, ian):
-    #raise NotImplementedError
+async def orcatask(cid, mb, chg_mlt, atcor, ian, orca="", simple="", block=""):
+    """
+    Args:
+        orca (str): the ORCA executable
+        simple (str): additional SimpleInput beside method
+            and basis
+        block (str): additional BlockInput beside ``pal``
+            and ``maxcore``
+
+    Per ASE's ORCA interface, the ORCA executable can also
+    be set by envar ``ORCA_COMMAND``. This tasklet depends
+    on OpenMPI >= 4.0 for parallelization.
+    """
     m, b = mb.split('/')
-    hdr = f"{m} {b}"
-    blk = '\n'.join([
-        f"%pal nprocs {GVAR.res.N} end", # FIXME: bind to specific processor, use MPI --bind-to
-        f"%maxcore {int(GVAR.res.m*1024)} end", # in MB
-    ])
+    hdr = f"{m} {b} {simple}"
+    blk = (
+        f"%pal nprocs {GVAR.res.N} end\n"
+        f"%maxcore {int(GVAR.res.m/GVAR.res.N*1024)}\n" # per core mem in MB
+        f"{block}"
+    )
     calc = ORCA(
         **__dl(cid), orcasimpleinput=hdr, orcablocks=blk,
         charge=chg_mlt[0], mult=chg_mlt[1],
     )
-    return await dumb_fio_task(cid, atcor, ian, calc)
-    #return await ase_fio_task(cid, atcor, ian, calc)
+    ORCA_CMD = orca or environ.get('ORCA_COMMAND', 'orca')
+    cpu = ','.join(map(str,sorted(GVAR.res.c)))
+    calc.command = f'{ORCA_CMD} PREFIX.inp "--bind-to cpulist:ordered --cpu-set {cpu}" > PREFIX.out' # TODO: this is for mpirun 4.0; generalize it to 3.x
+    return await ase_fio_task(cid, atcor, ian, calc)
 
 
 def __dl(cid):

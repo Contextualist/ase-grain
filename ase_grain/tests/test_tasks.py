@@ -1,4 +1,4 @@
-from ..tasks import gautask, psi4task
+from ..tasks import gautask, psi4task, orcatask
 
 from grain.subproc import subprocess_pool_scope
 from grain import GVAR
@@ -35,6 +35,15 @@ async def test_psi4():
                             [-0.02215968, -0.00362866,  0.01754429],
                             [-0.00303764, -0.00228981,  0.00205949]])
     cleanup("test.dat")
+
+async def test_orca():
+    e, f = await orcatask("test", "b3lyp/6-31++g(d,p)", **water)
+    assert allclose([e], [-76.394921967101])
+    assert allclose(f, [[ 0.02509026,  0.00591112, -0.01968815],
+                        [-0.02204778, -0.00364005,  0.01755853],
+                        [-0.00304249, -0.00227107,  0.00212963]],
+                    atol=1e-04) # For reason unknown, the force is rather erratic.
+    cleanup("test.engrad", "test.gbw", "test.inp", "test.out", "test.prop", "test_property.txt")
 
 def cleanup(*logs):
     for l in logs:

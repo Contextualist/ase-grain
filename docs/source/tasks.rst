@@ -20,3 +20,5 @@ reference lists additional parameters specific to each backend.
 .. autofunction:: gautask
 
 .. autofunction:: psi4task
+
+.. autofunction:: orcatask
