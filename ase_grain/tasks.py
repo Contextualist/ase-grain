@@ -15,12 +15,16 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, gau="g16"):
     Args:
         gau (str): the Gaussian executable
     """
-    m, b = mb.split('/')
+    mb = mb.split('/')
+    ioplist = None
+    if len(ian) > 50:
+        ioplist = ('2/9=2000',) # Gaussian calculator relies on 'input orientation' block. Turn it on.
     calc = Gaussian(
-        **__dl(cid), method=m, basis=b,
+        **__dl(cid), method=mb[0], basis=mb[1] if len(mb)>1 else None,
         charge=chg_mlt[0], mult=chg_mlt[1],
         cpu=','.join(map(str,sorted(GVAR.res.c))),
         mem=f"{GVAR.res.m}GB",
+        ioplist=ioplist,
     )
     # This is done in Gaussian.calculate, but we skip it due to the patched async calculation
     calc.command = calc.command.replace('GAUSSIAN', gau)
