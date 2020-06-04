@@ -10,10 +10,15 @@ from grain import GVAR
 
 from os import environ
 
-async def gautask(cid, mb, chg_mlt, atcor, ian, gau="g16"):
+async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16"):
     """
     Args:
-        gau (str): the Gaussian executable
+      cell (ndarray[(3,3), float] or see ASE doc):
+        Unit cell size. Arg for ``ase.atoms.Atoms``
+      pbc (bool or (bool, bool, bool)): Periodic
+        boundary conditions along each axis. Arg for
+        ``ase.atoms.Atoms``
+      gau (str): the Gaussian executable
     """
     mb = mb.split('/')
     ioplist = None
@@ -28,7 +33,7 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, gau="g16"):
     )
     # This is done in Gaussian.calculate, but we skip it due to the patched async calculation
     calc.command = calc.command.replace('GAUSSIAN', gau)
-    return await ase_fio_task(cid, atcor, ian, calc)
+    return await ase_fio_task(cid, calc, atcor, ian, cell, pbc)
 
 async def psi4task(cid, mb, chg_mlt, atcor, ian):
     """:func:`psi4task` is implemented using
@@ -43,7 +48,7 @@ async def psi4task(cid, mb, chg_mlt, atcor, ian):
         num_threads=GVAR.res.N, # use N threads for N cores, and subprocify handles which cores to bind
         memory=f"{getattr(GVAR.res,'m',0.5)}GB",
     )
-    return await ase_task(cid, atcor, ian, calc)
+    return await ase_task(cid, calc, atcor, ian)
 
 async def qetask(cid, mb, chg_mlt, atcor, ian):
     raise NotImplementedError
@@ -79,7 +84,7 @@ async def orcatask(cid, mb, chg_mlt, atcor, ian, orca="", simple="", block=""):
     ORCA_CMD = orca or environ.get('ORCA_COMMAND', 'orca')
     cpu = ','.join(map(str,sorted(GVAR.res.c)))
     calc.command = f'{ORCA_CMD} PREFIX.inp "--bind-to cpulist:ordered --cpu-set {cpu}" > PREFIX.out' # TODO: this is for mpirun 4.0; generalize it to 3.x
-    return await ase_fio_task(cid, atcor, ian, calc)
+    return await ase_fio_task(cid, calc, atcor, ian)
 
 
 def __dl(cid):

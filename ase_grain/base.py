@@ -1,6 +1,6 @@
 from grain.subproc import subprocify
 
-async def ase_fio_task(cid, atcor, ian, calc):
+async def ase_fio_task(cid, calc, atcor, ian, cell=None, pbc=None):
     """Base task for calculators implementing the
     `FileIOCalculator`_ interface (e.g. Gaussian,
     Orca, QE).
@@ -13,9 +13,14 @@ async def ase_fio_task(cid, atcor, ian, calc):
 
     Args:
       cid (str): Calculation ID, for time record only
+      calc: The calculator instance
       atcor (ndarray[(N,3), float]): Atom coordinate
       ian (ndarray[(N,), int]): Atomic numbers 
-      calc: The calculator instance
+      pbc (bool or (bool, bool, bool)): Periodic
+        boundary conditions along each axis. Arg for
+        ``ase.atoms.Atoms``
+      cell (ndarray[(3,3), float] or see ASE doc):
+        Unit cell size. Arg for ``ase.atoms.Atoms``
 
     Returns:
       Energy (in hartree) and forces (in hartree/angstrom)
@@ -28,7 +33,7 @@ async def ase_fio_task(cid, atcor, ian, calc):
     from ase.atoms import Atoms
     from ase.units import Hartree as hart2ev, Bohr as b2a
     from .util import timeblock
-    mol = Atoms(numbers=ian, positions=atcor)
+    mol = Atoms(numbers=ian, positions=atcor, cell=cell, pbc=pbc)
     mol.set_calculator(calc)
     with timeblock(cid):
         await mol._calc.acalculate(mol, ['energy', 'forces'], [])
@@ -37,10 +42,10 @@ async def ase_fio_task(cid, atcor, ian, calc):
         mol.get_forces() * b2a / hart2ev,
     )
 
-async def dumb_fio_task(cid, atcor, ian, calc):
+async def dumb_fio_task(cid, calc, atcor, ian, cell=None, pbc=None):
     import numpy as np
     from ase.atoms import Atoms
-    mol = Atoms(numbers=ian, positions=atcor)
+    mol = Atoms(numbers=ian, positions=atcor, cell=cell, pbc=pbc)
     mol.set_calculator(calc)
     mol._calc.write_input(mol, ['energy', 'forces'], [])
     return (
@@ -49,7 +54,7 @@ async def dumb_fio_task(cid, atcor, ian, calc):
     )
 
 @subprocify
-def ase_task(cid, atcor, ian, calc):
+def ase_task(cid, calc, atcor, ian):
     """Base task for inproc calculators (e.g. Psi4).
 
     For Parameters and Returns see above :func:`ase_fio_task`.
