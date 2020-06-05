@@ -1,5 +1,7 @@
 # ASE-Grain
 
+[![Docs](https://img.shields.io/badge/docs-read%20now-blue.svg)](https://ase-grain.readthedocs.io)
+
 An async wrapper for [ASE](https://gitlab.com/ase/ase), adapting the calculators into Grain-compatible jobs.
 
 ### Supported calculators
@@ -10,6 +12,10 @@ An async wrapper for [ASE](https://gitlab.com/ase/ase), adapting the calculators
 * Quantum Espresso
 
 ### Quickstart
+
+```Bash
+pip install git+https://github.com/Contextualist/ase-grain@0.1.0
+```
 
 Want to try out the tasklets without running a Grain mission? Easy:
 

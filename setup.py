@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ase_grain",
-    version="0.0.1",
+    name="ase-grain",
+    version="0.1.0",
     author="Harry Zhang",
     author_email="zhanghar@iu.edu",
     description="An async wrapper for ASE",
@@ -15,9 +15,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "ase @ git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424",
-        "grain-scheduler >= 0.12.1"
+        "grain-scheduler >= 0.12.1",
     ],
-    tests_require = [
+    tests_require=[
         "pytest",
         "pytest-trio",
     ],
