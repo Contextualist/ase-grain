@@ -7,6 +7,7 @@ An async wrapper for [ASE](https://gitlab.com/ase/ase), adapting the calculators
 * Gaussian
 * Psi4
 * ORCA
+* Quantum Espresso
 
 ### Quickstart
 

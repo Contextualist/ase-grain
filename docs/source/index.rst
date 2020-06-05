@@ -10,10 +10,10 @@ ASE-Grain encapsulates the
 `ASE calculators <https://wiki.fysik.dtu.dk/ase/ase/calculators/calculators.html>`__
 into tasklets, a single async function call that calculates energy and forces
 for a molecule using a electronic structure calculation backend. ASE provides
-interface to dozens of backends. Currently ASE-Grain supports Gaussian, Psi4, and
-ORCA, but other backend can be easily "asyncified" and added. The tasklets are
-designed to be used with Grain scheduler, but can also be easily repurposed for other
-async integrations.
+interface to dozens of backends. Currently ASE-Grain supports Gaussian, Psi4, ORCA,
+and Quantum Espresso, but other backend can be easily "asyncified" and added. The
+tasklets are designed to be used with Grain scheduler, but can also be easily
+repurposed for other async integrations.
 
 To get started, go through the tasklets and pick the one for the calculation backend
 of your choice. The tasklets are resource-aware and can be submited as a Grain
