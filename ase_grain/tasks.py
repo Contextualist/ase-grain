@@ -10,7 +10,7 @@ from grain import GVAR
 
 from os import environ
 
-async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16"):
+async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16", **kwargs):
     """
     Args:
       cell (ndarray[(3,3), float] or see ASE doc):
@@ -19,6 +19,12 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16"):
         boundary conditions along each axis. Arg for
         ``ase.atoms.Atoms``
       gau (str): the Gaussian executable
+
+    Any other keyword args are treated as Link0 or
+    route keywords. See ASE's `Gaussian`_ calculator
+    for reference.
+
+    .. _Gaussian: https://wiki.fysik.dtu.dk/ase/ase/calculators/gaussian.html#parameters
     """
     mb = mb.split('/')
     ioplist = None
@@ -30,6 +36,7 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16"):
         cpu=__cs(GVAR.res.c),
         mem=f"{GVAR.res.m}GB",
         ioplist=ioplist,
+        **kwargs,
     )
     # This is done in Gaussian.calculate, but we skip it due to the patched async calculation
     calc.command = calc.command.replace('GAUSSIAN', gau)
