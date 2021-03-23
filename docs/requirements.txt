@@ -2,6 +2,6 @@ sphinx
 sphinx_rtd_theme
 sphinxcontrib-trio
 
-git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424
+ase >= 3.21.0, < 3.22.0
 trio
 grain-scheduler >= 0.12.1
