@@ -1,6 +1,7 @@
 # ASE-Grain
 
 [![Docs](https://img.shields.io/badge/docs-read%20now-blue.svg)](https://ase-grain.readthedocs.io)
+[![PyPI version](https://img.shields.io/pypi/v/ase-grain.svg)](https://pypi.org/project/ase-grain)
 
 An async wrapper for [ASE](https://gitlab.com/ase/ase), adapting the calculators into Grain-compatible jobs.
 
@@ -14,7 +15,7 @@ An async wrapper for [ASE](https://gitlab.com/ase/ase), adapting the calculators
 ### Quickstart
 
 ```Bash
-pip install git+https://github.com/Contextualist/ase-grain@0.1.0
+pip install ase-grain
 ```
 
 Want to try out the tasklets without running a Grain mission? Easy:

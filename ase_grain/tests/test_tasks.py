@@ -31,9 +31,10 @@ async def test_psi4():
     async with subprocess_pool_scope(): # only needed for Psi4
         e, f = await psi4task("test", "b3lyp/6-31++g(d,p)", **water)
         assert allclose([e], [-76.43287871145814])
-        assert allclose(f, [[ 0.0251815 ,  0.00590822, -0.01959273],
-                            [-0.02215968, -0.00362866,  0.01754429],
-                            [-0.00303764, -0.00228981,  0.00205949]])
+        assert allclose(f, [[ 0.02518123,  0.00590826, -0.01959251],
+                            [-0.02214985, -0.00362224,  0.01753743],
+                            [-0.00303778, -0.0022901 ,  0.00205955]])
+        # result from Psi4 1.4a3.dev63
     cleanup("test.dat")
 
 async def test_orca():

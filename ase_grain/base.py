@@ -34,7 +34,7 @@ async def ase_fio_task(cid, calc, atcor, ian, cell=None, pbc=None):
     from ase.units import Hartree as hart2ev, Bohr as b2a
     from .util import timeblock
     mol = Atoms(numbers=ian, positions=atcor, cell=cell, pbc=pbc)
-    mol.set_calculator(calc)
+    mol.calc = calc
     with timeblock(cid):
         await mol._calc.acalculate(mol, ['energy', 'forces'], [])
     return (
@@ -46,7 +46,7 @@ async def dumb_fio_task(cid, calc, atcor, ian, cell=None, pbc=None):
     import numpy as np
     from ase.atoms import Atoms
     mol = Atoms(numbers=ian, positions=atcor, cell=cell, pbc=pbc)
-    mol.set_calculator(calc)
+    mol.calc = calc
     mol._calc.write_input(mol, ['energy', 'forces'], [])
     return (
         0.0,
@@ -79,7 +79,7 @@ def ase_task(cid, calc, atcor, ian):
     from ase.units import Hartree as hart2ev, Bohr as b2a
     from .util import timeblock
     mol = Atoms(numbers=ian, positions=atcor)
-    mol.set_calculator(calc)
+    mol.calc = calc
     with timeblock(cid):
         mol._calc.calculate(mol, ['energy', 'forces'], [])
     return (

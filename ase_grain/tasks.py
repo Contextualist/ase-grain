@@ -1,4 +1,4 @@
-import ase_grain.monkey_patch
+from . import monkey_patch
 from .base import ase_fio_task, ase_task, dumb_fio_task
 
 from ase.calculators.gaussian import Gaussian

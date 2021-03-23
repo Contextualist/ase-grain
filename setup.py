@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ase-grain",
-    version="0.1.0",
+    version="0.1.1",
     author="Harry Zhang",
     author_email="zhanghar@iu.edu",
     description="An async wrapper for ASE",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/Contextualist/ase-grain",
     packages=setuptools.find_packages(),
     install_requires=[
-        "ase @ git+https://gitlab.com/ase/ase.git@f4a9a424#egg=ase-f4a9a424",
+        "ase >= 3.21.0, < 3.22.0",
         "grain-scheduler >= 0.12.1",
     ],
     tests_require=[
