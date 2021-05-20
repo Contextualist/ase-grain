@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ase-grain",
-    version="0.1.1",
+    version="0.1.2",
     author="Harry Zhang",
     author_email="zhanghar@iu.edu",
     description="An async wrapper for ASE",

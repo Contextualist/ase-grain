@@ -10,7 +10,7 @@ from grain import GVAR
 
 from os import environ
 
-async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16", **kwargs):
+async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16", scrmem=0, **kwargs):
     """
     Args:
       cell (ndarray[(3,3), float] or see ASE doc):
@@ -19,6 +19,9 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16", 
         boundary conditions along each axis. Arg for
         ``ase.atoms.Atoms``
       gau (str): the Gaussian executable
+      scrmem (int): memory (in GB), out of the total
+        memory allocated, for scratch dir on a memory
+        fs.
 
     Any other keyword args are treated as Link0 or
     route keywords. See ASE's `Gaussian`_ calculator
@@ -34,7 +37,7 @@ async def gautask(cid, mb, chg_mlt, atcor, ian, cell=None, pbc=None, gau="g16", 
         **__dl(cid), method=mb[0], basis=mb[1] if len(mb)>1 else None,
         charge=chg_mlt[0], mult=chg_mlt[1],
         cpu=__cs(GVAR.res.c),
-        mem=f"{GVAR.res.m}GB",
+        mem=f"{GVAR.res.m-scrmem}GB",
         ioplist=ioplist,
         **kwargs,
     )
