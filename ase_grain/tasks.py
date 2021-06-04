@@ -64,7 +64,7 @@ async def qetask(cid, atcor, ian, cell,
                  pseudopotentials, kspacing=None, kpts=None, koffset=(0,0,0),
                  input_data=None, mpi="Open MPI", **kwargs):
     """
-    QE has a very different from other backend. See ASE's
+    QE is very different from other backends. See ASE's
     `Espresso`_ calculator for reference.
 
     .. _Espresso: https://wiki.fysik.dtu.dk/ase/ase/calculators/espresso.html#ase.calculators.espresso.Espresso
@@ -81,6 +81,8 @@ async def qetask(cid, atcor, ian, cell,
        no guarentee for QE to go over that value, so you
        might want to set a higher one.
     """
+    input_data = input_data or {}
+    input_data['tprnfor'] = True # print forces
     calc = Espresso(
         **__dl(cid), input_data=input_data,
         pseudopotentials=pseudopotentials,
@@ -94,7 +96,7 @@ async def qetask(cid, atcor, ian, cell,
         para_prefix = f'mpirun -np {GVAR.res.N} -genv I_MPI_PIN_PROCESSOR_LIST={cpu} '
     else:
         raise TypeError(f"Unsupported MPI type: {mpi}")
-    calc.command = para_prefix + 'pw.x -in PREFIX.inp > PREFIX.out'
+    calc.command = para_prefix + 'pw.x -in PREFIX.pwi > PREFIX.pwo'
     return await ase_fio_task(cid, calc, atcor, ian, cell)
 
 async def orcatask(cid, mb, chg_mlt, atcor, ian, orca="", simple="", block=""):
