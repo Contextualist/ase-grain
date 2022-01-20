@@ -16,7 +16,7 @@ setuptools.setup(
     url="https://github.com/Contextualist/ase-grain",
     packages=setuptools.find_packages(),
     install_requires=[
-        "ase >= 3.21.0, < 3.22.0",
+        "ase >= 3.22.0, < 3.23.0",
         "grain-scheduler >= 0.12.1",
         "trio",
     ],
